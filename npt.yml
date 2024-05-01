@@ -1,0 +1,14 @@
+- name: Set up NPT on all nodes.
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ensure NTP is installed.
+      package:
+        name: ntp
+        state: present
+        
+    - name: Ensure NTP is running.
+      systemd:
+        name: ntpd
+        state: started
+        enabled: yes

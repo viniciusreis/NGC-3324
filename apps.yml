@@ -1,0 +1,33 @@
+- name: Install zsh workstations.
+  hosts: workstation
+  become: yes
+  vars_files:
+    - password.yml
+  tasks:
+    - name: Install zsh.
+      package:
+        name: zsh
+        state: present
+
+    - name: Add vinicius user
+      user:
+        name: vinicius
+        comment: Vinícius Reis
+        shell: /usr/bin/zsh
+        password: "{{ vinicius_password |  password_hash('sha512') }}"
+        append: yes
+        createhome: yes
+        groups: root
+
+    #- name: Task using encrypted password
+    #  debug:
+    #    msg: "Vinicius password is {{ vinicius_password }}"
+        
+    # - name: Get current shell.
+    #   shell: "getent passwd root | cut -d: -f7"
+    #   register: current_shell
+    #   changed_when: false
+
+    # - name: Change the default shell to zsh if it's not already set.
+    #   command: chsh -s $(which zsh)
+    #   when: current_shell.stdout != '/usr/bin/zsh'
